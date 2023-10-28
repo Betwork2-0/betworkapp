@@ -1,0 +1,59 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  padding: 10px;
+  background-color: #333;
+  color: white;
+}
+
+.main-content {
+  display: flex;
+  padding: 20px;
+}
+
+.profile-section {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #ccc;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  background-color: #ddd;
+  margin-bottom: 10px;
+}
+
+.balance-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-section {
+  flex: 2;
+  padding: 20px;
+
+  .post {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  .update-status {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+}
+
+.nav-sidebar {
+  flex: 1;
+  padding: 20px;
+  border-left: 1px solid #ccc;
+  // Other styles for navigation items
+}
