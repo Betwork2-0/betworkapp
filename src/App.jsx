@@ -1,21 +1,25 @@
 import React from 'react';
+import {Routes, Route} from 'react-router-dom';
 import './App.scss';
+import NavBar from './components/Navbar';
+import { SnackbarProvider } from "./context/SnackbarContext";
+import { UserProvider } from "./context/UserContext";
+import SearchedResults from './pages/SearchedResult';
+
 
 export default function App() {
   return (
     <div className="app">
-      <Navbar />
-      <MainContent>
-        <ProfileSection />
-        <PostSection />
-        <NavigationSidebar />
-      </MainContent>
+        <SnackbarProvider>
+        <UserProvider>
+        <NavBar />
+        <Routes>
+        <Route path="/search" element={<SearchedResults/>}></Route>
+        </Routes>
+        </UserProvider>
+        </SnackbarProvider>
     </div>
   );
-}
-
-function Navbar() {
-  return <div className="navbar">Betwork</div>;
 }
 
 function MainContent({ children }) {
