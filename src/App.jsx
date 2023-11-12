@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import './App.scss';
 import NavBar from './components/Navbar';
 import HomePage from './pages/Home';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 import { SnackbarProvider } from "./context/SnackbarContext";
 import { UserProvider } from "./context/UserContext";
 
@@ -26,6 +28,8 @@ export default function App() {
           <MainContent>
             <Routes>
               <Route exact path="/" element={<HomePage />}></Route>
+              <Route path="/signup" element={<SignUp/>}></Route>
+              <Route path="/login" element={<SignIn/>}></Route>
             </Routes>
           </MainContent>
         </UserProvider>

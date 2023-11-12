@@ -39,7 +39,7 @@ function NavBar() {
           component={RouterLink}
           to="/"
         >
-          Reader Hub
+         Betwork 
         </Typography>
         <Stack direction="row" spacing={2}>
           {user ? (
