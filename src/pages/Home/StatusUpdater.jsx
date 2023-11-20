@@ -17,14 +17,15 @@ const StatusUpdater = () => {
             border: '1px solid #ddd',
             padding: '20px',
             boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            marginBottom: '40px'
+            marginBottom: '40px',
+            backgroundColor: 'white'
         },
         header: {
             fontSize: '24px',
             marginBottom: '20px'
         },
         textarea: {
-            width: '100%',
+            width: '-webkit-fill-available',
             padding: '10px',
             border: '1px solid #ddd',
             resize: 'none'

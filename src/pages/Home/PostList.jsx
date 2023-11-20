@@ -8,9 +8,10 @@ const Post = () => {
     const styles = {
         container: {
             border: '1px solid #e0e0e0',
-            padding: '15px',
+            padding: '20px',
             borderRadius: '5px',
             marginBottom: '20px',
+            backgroundColor: 'white'
         },
         header: {
             display: 'flex',
@@ -23,9 +24,11 @@ const Post = () => {
             marginRight: '10px'
         },
         postBody: {
-            backgroundColor: '#f5f5f5',
-            padding: '10px',
-            borderRadius: '5px'
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '5px',
+            border: '1px solid #ddd',
+            color: '#555'
         },
         timestamp: {
             marginTop: '10px',
@@ -37,7 +40,7 @@ const Post = () => {
     return (
         <div style={styles.container}>
             <div style={styles.header}>
-                <img src="path_to_avatar_image.jpg" alt="Avatar" style={styles.avatar} />
+                <img src="eevee.png" alt="Avatar" style={styles.avatar} />
                 <span>Rails liked a post</span>
             </div>
             <div style={styles.postBody}>

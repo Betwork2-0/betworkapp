@@ -1,6 +1,8 @@
 import React from 'react';
 import PostList from './PostList';
 import StatusUpdater from './StatusUpdater';
+import Menu from './Menu';
+import Profile from './Profile';
 
 // CSS styles
 const styles = {
@@ -11,16 +13,16 @@ const styles = {
   },
   sidebar: {
     flexBasis: '200px',
-    background: '#f0f0f0',
+    background: 'white',
     padding: '20px',
     border: '1px solid #ccc',
-    height: '100%',
+    height: 'fit-content',
   },
   mainContent: {
     flex: 1,
     maxWidth: '720px',
     minWidth: '360px',
-    background: '#fff',
+    // background: '#fff',
     margin: '0 64px',
     height: '100%',
   },
@@ -30,16 +32,14 @@ const HomePage = () => {
   return (
     <div style={styles.container}>
       <Sidebar>
-        <h3>Sidebar 1</h3>
-        <p>Content for sidebar 1</p>
+        <Profile />
       </Sidebar>
       <MainContent>
         <StatusUpdater />
         <PostList />
       </MainContent>
       <Sidebar>
-        <h3>Sidebar 2</h3>
-        <p>Content for sidebar 2</p>
+        <Menu />
       </Sidebar>
     </div>
   );
