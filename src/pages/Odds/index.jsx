@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
+import { getNBAGames } from '../../api/SportsAPI';
 
 const rows = [
     { id: 1, homeTeam: 'NYK', awayTeam: 'OKC', timeDate: '12:10 ET 11/13/2022', homeMoneyLine: '-210', awayMoneyLine: '175' },
@@ -28,10 +29,25 @@ const styles = {
 export default function Odds() {
 
     const navigate = useNavigate();
+    const [gameData, setGameData] = useState([]);
+    const [error, setError] = useState(null); // State to store error message
 
     const proposeBet = (id) => {
         navigate(`/bet/${id}`);
     }
+
+    const fetchData = async () => {
+        try {
+            const data = await getNBAGames();
+            setGameData(data);
+        } catch (e) {
+            setError("Could not connect to the gaming service, please try again later");
+            console.error(e);
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <div style={styles.container}>
@@ -49,7 +65,7 @@ export default function Odds() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {gameData.map((row) => (
                             <TableRow
                                 key={row.name}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
