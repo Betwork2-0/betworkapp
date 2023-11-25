@@ -13,6 +13,7 @@ import { SnackbarProvider } from "./context/SnackbarContext";
 import { UserProvider } from "./context/UserContext";
 import PageLevelMessage from './components/Snackbar';
 import MyBets from './pages/MyBets';
+import Friends from './pages/Friends';
 
 
 const styles = {
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/bet/:id" element={<BetSelectFriend/>}></Route>
               <Route path="/bet/:id/confirm" element={<BetConfirm/>}></Route>
               <Route path="/my/bets" element={<MyBets/>}></Route>
+              <Route path="/my/friends" element={<Friends/>}></Route>
             </Routes>
           </MainContent>
         </UserProvider>

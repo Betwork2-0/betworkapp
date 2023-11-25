@@ -4,6 +4,7 @@ import { AppBar, Button, Toolbar, Typography } from "@mui/material";
 import BookIcon from "@mui/icons-material/Book";
 import { Stack } from "@mui/system";
 import { useUser } from "../context/UserContext";
+import NotificationMenu from "./NotificationMenu";
 
 const styles = {
   iconLink: {
@@ -19,6 +20,8 @@ const styles = {
     color: "unset",
   },
 };
+
+const notifications = ['New message from Alice', 'Bob commented on your post'];
 
 function NavBar() {
   const { user, setUser } = useUser();
@@ -62,6 +65,7 @@ function NavBar() {
               <Button color="inherit" component={RouterLink} to="/login">
                 Login
               </Button>
+              <NotificationMenu notifications={notifications} />
             </>
           )}
         </Stack>

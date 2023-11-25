@@ -32,13 +32,11 @@ const styles = {
 
 const Menu = () => {
   const menuItems = [
-    { name: 'Betwork Board', icon: '📋', link: '/betwork-board' },
+    { name: 'Betwork Board', icon: '📋', link: '/' },
     { name: 'My Bets', icon: '🔒', link: '/my/bets' },
     { name: 'Live Bets', icon: '🔴', link: '/odds' },
     { name: 'Manage Funds', icon: '💰', link: '/funds' },
-    { name: 'Friends', icon: '👥', link: '/friends' },
-    { name: 'Betwork Group', icon: '👥', link: '/betwork-group' },
-    { name: 'Find Friends', icon: '🔍', link: '/find-friends' },
+    { name: 'Friends', icon: '👥', link: '/my/friends' },
     { name: 'Edit Profile', icon: '✏️', link: '/edit-profile' },
     { name: 'Change Password', icon: '🔑', link: '/change-password' },
   ];
