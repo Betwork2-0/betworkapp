@@ -29,6 +29,20 @@ contract Betwork {
         return true;
     }
 
+    function getUserList() public view returns (address[] memory userlist){
+        userlist = new address[](users.length);
+        for (uint i = 0; i < users.length; i++)
+            userlist[i] = users[i];
+    }
+
+    function getBalance(address user) public view returns (int balance) {
+        if(checkUserExists(user)) {
+            balance = balances[user];
+        } else {
+            balance = 0;
+        }
+    }
+
     function checkUserExists(address user) private view returns (bool) {
         for (uint i = 0; i < users.length; i++)
         {
@@ -61,7 +75,18 @@ contract Betwork {
         return changeWallet(user, -amount);
     }
 
-    function addBet(uint id, address receiver, string memory t_s, int a_s, string memory t_r, int a_r) public returns (bool) {
+    function getBet(uint id) public view returns (Bet memory thisbet) {
+        for(uint i = 0; i < bets.length; i++)
+        {
+            if(bets[i].id == id)
+            {
+                thisbet = bets[i];
+                break;
+            }
+        }
+    }
+
+    function addBet(uint id, address receiver, string calldata t_s, int a_s, string calldata t_r, int a_r) public returns (bool) {
         assert(a_s > 0);
         assert(a_r > 0);
         if(balances[msg.sender] < a_s && balances[receiver] < a_r)
@@ -109,7 +134,7 @@ contract Betwork {
         return false;
     }
 
-    function setWinner(uint id, string memory winner) public returns (bool) {
+    function setWinner(uint id, string calldata winner) public returns (bool) {
         for(uint i = 0; i < bets.length; i++)
         {
             if(bets[i].id == id)
