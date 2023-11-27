@@ -117,6 +117,73 @@ var abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "settleBet",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "winner",
+				"type": "string"
+			}
+		],
+		"name": "setWinner",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "int256",
+				"name": "amount",
+				"type": "int256"
+			}
+		],
+		"name": "withdrawMoneyFromWallet",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getAllBets",
 		"outputs": [
@@ -201,6 +268,77 @@ var abi = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getBet",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "receiver",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "team_sender",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "team_receiver",
+						"type": "string"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount_sender",
+						"type": "int256"
+					},
+					{
+						"internalType": "int256",
+						"name": "amount_receiver",
+						"type": "int256"
+					},
+					{
+						"internalType": "string",
+						"name": "team_winner",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "confirmed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "is_settled",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct Betwork.Bet",
+				"name": "thisbet",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getUserList",
 		"outputs": [
@@ -212,73 +350,6 @@ var abi = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "winner",
-				"type": "string"
-			}
-		],
-		"name": "setWinner",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "settleBet",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"internalType": "int256",
-				"name": "amount",
-				"type": "int256"
-			}
-		],
-		"name": "withdrawMoneyFromWallet",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
 ]; // FIXME: fill this in with your contract's ABI //Be sure to only have one array, not two
 
@@ -286,7 +357,7 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x6Aabe575FafAc639b846291139D9B1C43E7aB5CE'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0x77A71Af2BF061A3DE55364Cb81Cd16B1fe59AbD6'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
@@ -305,60 +376,33 @@ async function addBalance(user, amount) {
 	return BlockchainSplitwise.methods.addMoneyToWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
+async function withdrawBalance(user, amount) {
+	return BlockchainSplitwise.methods.withdrawMoneyFromWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
+}
+
 async function getBalance(user, amount) {
 	return BlockchainSplitwise.methods.getBalance(user).call({from:web3.eth.defaultAccount});
 }
 
+async function sendBet(betid, receiver, t_s, a_s, t_r, a_r) {
+	return BlockchainSplitwise.methods.addBet(betid, receiver, t_s, a_s, t_r, a_r).send({from:web3.eth.defaultAccount, gas:1000000});
+}
 
-// // TODO: Get the last time this user has sent or received an IOU, in seconds since Jan. 1, 1970
-// // Return null if you can't find any activity for the user.
-// // HINT: Try looking at the way 'getAllFunctionCalls' is written. You can modify it if you'd like.
-// async function getLastActive(user) {
-// 	var func_calls = await getAllFunctionCalls(contractAddress, 'add_IOU') 
-// 	var result = []
-// 	for (let i = 0; i < func_calls.length; i++) {
-// 		if (func_calls[i].from.toLowerCase() == user.toLowerCase() || func_calls[i].args[0].toLowerCase() == user.toLowerCase()) {
-// 			if(func_calls[i].t > result)
-// 				result = func_calls[i].t
-// 		}
-// 	}
-// 	return Math.max(result)
-// }
+async function confirmBet(betid) {
+	return BlockchainSplitwise.methods.confirmBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
+}
 
-// async function getCreditorsForUser(user) {
-// 	var result = [];
-// 	var users = getUsers();
-// 	for (let i = 0; i <= users.length; i++) {
-// 		const amt = await BlockchainSplitwise.methods.lookup(user, node).call({from:web3.eth.defaultAccount});
-// 		if(parseInt(amt) != 0) {
-// 			result.push(users[i]);
-// 		}
-// 	}
-// 	return result;
-// }
+async function setWinner(betid, winner) {
+	return BlockchainSplitwise.methods.setWinner(betid, winner).send({from:web3.eth.defaultAccount, gas:1000000});
+}
 
-// // TODO: add an IOU ('I owe you') to the system
-// // The person you owe money is passed as 'creditor'
-// // The amount you owe them is passed as 'amount'
-// async function add_IOU(creditor, amount) {
+async function settleBet(betid) {
+	return BlockchainSplitwise.methods.settleBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
+}
 
-// 	const debtor = web3.eth.defaultAccount;
-// 	const path = await doBFS(creditor, debtor, getCreditorsForUser);
-	
-// 	amount = parseInt(amount);
-// 	var min_on_cycle = 0;
-
-// 	if (path != null) {
-// 		min_on_cycle = amount
-// 		for (let i = 0; i < path.length - 1; i++) {
-// 		  const new_amount = await BlockchainSplitwise.methods.lookup(path[i], path[i+1]).call({from:web3.eth.defaultAccount});
-// 	  	  min_on_cycle = Math.min(min_on_cycle, parseInt(new_amount));
-// 	  	}
-// 		await BlockchainSplitwise.methods.updateCycle(path, min_on_cycle).send({from:web3.eth.defaultAccount, gas:300000000});
-// 	}
-// 	return BlockchainSplitwise.methods.add_IOU(creditor, amount - min_on_cycle).send({from:web3.eth.defaultAccount, gas:300000000});
-// }
-
+async function getBet(betid) {
+	return BlockchainSplitwise.methods.getBet(betid).call({from:web3.eth.defaultAccount});
+}
 
 function check(name, condition) {
 	if (condition) {
@@ -375,9 +419,9 @@ async function sanityCheck() {
 
 	var accounts = await web3.eth.getAccounts();
 
-	web3.eth.defaultAccount = accounts[0]; //I am the sender
 	const sender = accounts[0];
 	const receiver = accounts[1];
+	web3.eth.defaultAccount = sender; //I am the sender
 	console.log(`Sender: ${sender}; Receiver: ${receiver}`)
 	
 	//get users
@@ -392,52 +436,62 @@ async function sanityCheck() {
 	check("getUserList() has 2 users", users.length === 2);
 
 	//check initial balance
-	const balance_sender_i = parseInt(await getBalance(sender))
-	console.log(`Sender has initial balance: ${balance_sender_i}`);
+	var balance_sender = parseInt(await getBalance(sender))
+	console.log(`Sender has initial balance: ${balance_sender}`);
 
-	const balance_receiver_i = parseInt(await getBalance(receiver))
-	console.log(`Receiver has initial balance: ${balance_receiver_i}`);
+	var balance_receiver = parseInt(await getBalance(receiver))
+	console.log(`Receiver has initial balance: ${balance_receiver}`);
 
+	//withdraw all balance and check if zero
+	if(balance_sender > 0)
+	{
+		transac = await withdrawBalance(sender, balance_sender)
+		balance_sender = parseInt(await getBalance(sender))
+		check("After withdrawal, sender has balance 0", balance_sender === 0)
+	}
+	if(balance_receiver > 0)
+	{
+		transac = await withdrawBalance(receiver, balance_receiver)
+		balance_receiver = parseInt(await getBalance(receiver))
+		check("After withdrawal, receiver has balance 0", balance_receiver === 0)
+	}
+	
 	
 	//adding money to wallet
 	transac = await addBalance(sender, 10)
 	transac = await addBalance(receiver, 15)
 	
 	//check final balance
-	const balance_sender_f = parseInt(await getBalance(sender))
-	const balance_receiver_f = parseInt(await getBalance(receiver))
-	console.log(`Sender has final balance: ${balance_sender_f}`);
-	console.log(`Receiver has final balance: ${balance_receiver_f}`);
-	check("Sender final and initial differs by 10", balance_sender_f === balance_sender_i + 10)
-	check("Receiver final and initial differs by 15", balance_receiver_f === balance_receiver_i + 15)
+	balance_sender = parseInt(await getBalance(sender))
+	balance_receiver = parseInt(await getBalance(receiver))
+	check("After deposit, sender has balance 10", balance_sender === 10)
+	check("After deposit, receiver has balance 15", balance_receiver === 15)
 
+	betid = 1
+	team_sender = "TS"
+	team_receiver = "TR"
+	//adding bet
+	transac = await sendBet(betid, receiver, team_sender, balance_sender, team_receiver, balance_receiver)
+	
+	//confirming bet
+	web3.eth.defaultAccount = receiver;
+	transac = await confirmBet(betid)
+	
+	//setting winner
+	transac = await setWinner(betid, team_receiver)
 
-	// var users = await getUsers();
-	// score += check("getUsers() initially empty", users.length === 0);
+	//printing bet
+	var bet = await getBet(betid)
+	console.log(bet)
 
-	// var owed = await getTotalOwed(accounts[0]);
-	// score += check("getTotalOwed(0) initially empty", owed === 0);
+	//settle bet
+	transac = await settleBet(betid)
 
-	// var lookup_0_1 = await BlockchainSplitwise.methods.lookup(accounts[0], accounts[1]).call({from:web3.eth.defaultAccount});
-	// score += check("lookup(0,1) initially 0", parseInt(lookup_0_1, 10) === 0);
-
-	// var response = await add_IOU(accounts[1], "10");
-
-	// users = await getUsers();
-	// score += check("getUsers() now length 2", users.length === 2);
-
-	// owed = await getTotalOwed(accounts[0]);
-	// score += check("getTotalOwed(0) now 10", owed === 10);
-
-	// lookup_0_1 = await BlockchainSplitwise.methods.lookup(accounts[0], accounts[1]).call({from:web3.eth.defaultAccount});
-	// score += check("lookup(0,1) now 10", parseInt(lookup_0_1, 10) === 10);
-
-	// var timeLastActive = await getLastActive(accounts[0]);
-	// var timeNow = Date.now()/1000;
-	// var difference = timeNow - timeLastActive;
-	// score += check("getLastActive(0) works", difference <= 60 && difference >= -3); // -3 to 60 seconds
-
-	// console.log("Final Score: " + score +"/21");
+	//printing balances
+	balance_sender = parseInt(await getBalance(sender))
+	balance_receiver = parseInt(await getBalance(receiver))
+	console.log(`Sender has final balance: ${balance_sender}`);
+	console.log(`Receiver has final balance: ${balance_receiver}`);
 }
 
 sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
