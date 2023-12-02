@@ -32,13 +32,14 @@ export default function Odds() {
     const [gameData, setGameData] = useState([]);
     const [error, setError] = useState(null); // State to store error message
 
-    const proposeBet = (id) => {
-        navigate(`/bet/${id}`);
+    const proposeBet = (bet) => {
+        navigate(`/bet/${bet.id}`, { state: { bet } });
     }
 
     const fetchData = async () => {
         try {
             const data = await getNBAGames();
+            console.log(data);
             setGameData(data);
         } catch (e) {
             setError("Could not connect to the gaming service, please try again later");
@@ -76,7 +77,7 @@ export default function Odds() {
                                 <TableCell align="left">{row.homeMoneyLine}</TableCell>
                                 <TableCell align="left">{row.awayMoneyLine}</TableCell>
                                 <TableCell align="right">
-                                    <Button variant='contained' onClick={() => proposeBet(row.id)}>Propose Bet</Button>
+                                    <Button variant='contained' onClick={() => proposeBet(row)}>Propose Bet</Button>
                                 </TableCell>
                             </TableRow>
                         ))}

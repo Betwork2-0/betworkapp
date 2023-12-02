@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Divider from '../../components/Divider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Dummy data for friends list
 const friends = [
@@ -18,11 +18,15 @@ const friends = [
     { id: 4, name: 'Solomon Chang', img: '/eevee.png' }
 ];
 
-const bet = { id: 1, homeTeam: 'NYK', awayTeam: 'OKC', timeDate: '12:10 ET 11/13/2022', homeMoneyLine: '-210', awayMoneyLine: '175' };
+// const bet = { id: 1, homeTeam: 'NYK', awayTeam: 'OKC', timeDate: '12:10 ET 11/13/2022', homeMoneyLine: '-210', awayMoneyLine: '175' };
 
 function BetSelectFriend() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const { bet } = location.state || {};
+
     // Function to handle bet proposal
     const proposeBet = (bet, friend) => {
         console.log('Bet proposed with friend ID:', friend.id);
