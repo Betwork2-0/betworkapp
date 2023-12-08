@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Divider from '../../components/Divider';
 import { Button } from '@mui/material';
+import ButtonSpinner from '../../components/ButtonSpinner';
 
 const styles = {
     friendsContainer: {
@@ -33,17 +34,24 @@ const styles = {
     }
 };
 
-const FriendList = ({ friends }) => {
+const FriendList = ({ friends, addFriend }) => {
+
+    const [loading, setLoading] = useState(false);
+
     return (
         <div style={styles.friendsContainer}>
             <ul style={styles.friendList}>
-                {friends.map((friend) => (
-                    <li key={friend.id} style={styles.friendItem}>
-                        <img src={friend.img} alt={friend.name} style={styles.friendImage} width="50" height="50" />
-                        <div>{friend.name}</div>
-                        <Button variant='contained' onClick={() => proposeBet(bet, friend)} sx={styles.proposeButton}>
-                            See their bets
-                        </Button>
+                {friends?.length > 0 && friends.map((friend) => (
+                    <li key={addFriend ? friend.user_name : friend[0]} style={styles.friendItem}>
+                        <img src="/eevee.png" style={styles.friendImage} width="50" height="50" />
+                        <div>{addFriend ? friend.user_name : friend[0]}</div>
+                        {addFriend ?
+                            <Button variant='contained' onClick={() => addFriend(friend.user_name, setLoading)} sx={styles.proposeButton}>
+                                {loading ? <ButtonSpinner /> : "Add friend"}
+                            </Button>
+                            : <Button variant='contained' onClick={() => proposeBet(bet, friend)} sx={styles.proposeButton}>
+                                See their bets
+                            </Button>}
                     </li>
                 ))}
             </ul>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import './App.scss';
 import NavBar from './components/Navbar';
 import HomePage from './pages/Home';
@@ -26,6 +26,16 @@ const styles = {
 }
 
 export default function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (!user && (location.pathname !== "/login" && location.pathname !== "/signup")) {
+      navigate('/login'); // Redirect to sign-in page if no user
+    }
+  }, []);
+
   return (
     <div>
       <SnackbarProvider>

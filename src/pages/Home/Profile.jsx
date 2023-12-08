@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import { useUser } from "../../context/UserContext";
 
 // Inline styles
 const styles = {
@@ -43,6 +44,33 @@ const styles = {
 };
 
 const Profile = () => {
+    const [balance, setBalance] = useState(0);
+    const { user } = useUser();
+    const [pendingAmount, setPendingAmount] = useState(0);
+
+    useEffect(() => {
+        getBalance(user.solidity_address)
+        .then(data => {
+            setBalance(data);
+            return getAllBets()
+        })
+        .then((data) => {
+            let pending_amount = 0;
+            data.forEach(bet => {
+                if ((bet.receiver === user.solidity_address || bet.sender === user.solidity_address) && bet.confirmed) {
+                    pending_amount += Number(bet.amount_receiver);
+                }
+            })
+            setPendingAmount(pending_amount);
+        })
+        .catch(e => console.log(e))
+
+        // getAllBets()
+        // .then(data => data.filter((bet) => 
+        // bet.sender === user.solidity_address || bet.receiver === user.solidity_address
+        // ).)
+    }, [])
+
     return (
         <div style={styles.sidebarProfile}>
             <div style={styles.profileHeader}>
@@ -51,14 +79,14 @@ const Profile = () => {
                     alt="Logo"
                     style={styles.profileLogo}
                 />
-                <span style={styles.profileName}>Rails</span>
+                <span style={styles.profileName}>{user.user_name}</span>
             </div>
             <div style={styles.balanceItem}>
                 <div>
                     <div style={styles.balanceItemTitle}>Actual Balance</div>
                     <div>
                         <span style={styles.icon}>🔒</span>
-                        <span style={styles.amount}>4900.0 dollars</span></div>
+                        <span style={styles.amount}>{(Number(balance) + Number(pendingAmount)).toFixed(2)} dollars</span></div>
                 </div>
             </div>
             <div style={styles.balanceItem}>
@@ -67,7 +95,7 @@ const Profile = () => {
                     <div style={styles.balanceItemTitle}>Pending Bets</div>
                     <div style={styles.amount}>
                         <span style={styles.icon}>🔒</span>
-                        <span>250.0 dollars</span></div>
+                        <span>{Number(pendingAmount).toFixed(2)} dollars</span></div>
                 </div>
             </div>
             <div style={styles.balanceItem}>
@@ -75,7 +103,7 @@ const Profile = () => {
                     <div style={styles.balanceItemTitle}>Available Balance</div>
                     <div style={styles.amount}>
                         <span style={styles.icon}>🔒</span>
-                        <span>4650.0 dollars</span></div>
+                        <span>{Number(balance).toFixed(2)} dollars</span></div>
                 </div>
             </div>
         </div>

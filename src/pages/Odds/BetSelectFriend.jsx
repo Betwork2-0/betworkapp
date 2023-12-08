@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Divider from '../../components/Divider';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from "../../context/UserContext";
+import Spinner from "../../components/Spinner";
 
 // Dummy data for friends list
 const friends = [
@@ -26,6 +29,9 @@ function BetSelectFriend() {
     const location = useLocation();
 
     const { bet } = location.state || {};
+    const [friends, setFriends] = useState([]);
+    const { user } = useUser();
+    const [loading, setLoading] = useState(false);
 
     // Function to handle bet proposal
     const proposeBet = (bet, friend) => {
@@ -70,6 +76,22 @@ function BetSelectFriend() {
         }
     };
 
+    useEffect(() => {
+        const getFriends = async () => {
+            setLoading(true);
+            let username = user.user_name;
+            axios.get(`http://52.188.229.42:5011/api/v1/user/${username}/friends`)
+            .then(data => {
+                console.log("friend data ", data);
+                setFriends(data.data.payload);
+            })
+            .catch(e => console.log(e))
+            .finally(() => setLoading(false))
+        }
+
+        getFriends();
+    }, [])
+
     return (
         <div style={styles.container}>
             <TableContainer component={Paper} sx={{ height: 'min-content' }}>
@@ -99,17 +121,18 @@ function BetSelectFriend() {
             <div style={styles.friendsContainer}>
                 <h2 style={styles.header}>Choose friend to place bet against</h2>
                 <Divider />
-                <ul style={styles.friendList}>
-                    {friends.map((friend) => (
-                        <li key={friend.id} style={styles.friendItem}>
-                            <img src={friend.img} alt={friend.name} style={styles.friendImage} width="50" height="50" />
-                            <div>{friend.name}</div>
-                            <Button variant='contained' onClick={() => proposeBet(bet, friend)} sx={styles.proposeButton}>
-                                Propose Bet
-                            </Button>
-                        </li>
-                    ))}
-                </ul>
+                {loading ? <Spinner /> :
+                    <ul style={styles.friendList}>
+                        {friends.map((friend) => (
+                            <li key={friend.id} style={styles.friendItem}>
+                                <img src="/eevee.png" alt={friend.name} style={styles.friendImage} width="50" height="50" />
+                                <div>{friend[0]}</div>
+                                <Button variant='contained' onClick={() => proposeBet(bet, friend)} sx={styles.proposeButton}>
+                                    Propose Bet
+                                </Button>
+                            </li>
+                        ))}
+                    </ul>}
             </div>
         </div>
     );

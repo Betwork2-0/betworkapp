@@ -2,7 +2,7 @@
 //                                  Config
 // =============================================================================
 
-let web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+var web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 // Constant we use later
 var GENESIS = '0x0000000000000000000000000000000000000000000000000000000000000000';
@@ -16,6 +16,11 @@ var abi = [
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
 			},
 			{
 				"internalType": "address",
@@ -81,6 +86,11 @@ var abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
@@ -118,6 +128,11 @@ var abi = [
 	},
 	{
 		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
 			{
 				"internalType": "uint256",
 				"name": "id",
@@ -357,8 +372,19 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x77A71Af2BF061A3DE55364Cb81Cd16B1fe59AbD6'; // FIXME: fill this in with your contract's address/hash
+var contractAddress = '0xa221cca7244718EBB0d7A1852b136c5F2ba188A4'; // FIXME: fill this in with your contract's address/hash
 var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
+// web3.eth.defaultAccount = getDefault();
+getDefault().then(data => {
+	web3.eth.defaultAccount = data;
+})
+//web3.eth.defaultAccount = accounts[0]; //I am the sender
+
+async function getDefault() {
+	var accounts = await web3.eth.getAccounts();
+	console.log(accounts);
+	return accounts[0];
+}
 
 // =============================================================================
 //                            Functions To Implement
@@ -380,28 +406,32 @@ async function withdrawBalance(user, amount) {
 	return BlockchainSplitwise.methods.withdrawMoneyFromWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
-async function getBalance(user, amount) {
+async function getBalance(user) {
 	return BlockchainSplitwise.methods.getBalance(user).call({from:web3.eth.defaultAccount});
 }
 
-async function sendBet(betid, receiver, t_s, a_s, t_r, a_r) {
-	return BlockchainSplitwise.methods.addBet(betid, receiver, t_s, a_s, t_r, a_r).send({from:web3.eth.defaultAccount, gas:1000000});
+async function sendBet(betid, user, receiver, t_s, a_s, t_r, a_r) {
+	return BlockchainSplitwise.methods.addBet(betid, user, receiver, t_s, a_s, t_r, a_r).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
-async function confirmBet(betid) {
-	return BlockchainSplitwise.methods.confirmBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
+async function confirmBet(user, betid) {
+	return BlockchainSplitwise.methods.confirmBet(user, betid).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
 async function setWinner(betid, winner) {
 	return BlockchainSplitwise.methods.setWinner(betid, winner).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
-async function settleBet(betid) {
-	return BlockchainSplitwise.methods.settleBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
+async function settleBet(user, betid) {
+	return BlockchainSplitwise.methods.settleBet(user, betid).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
 async function getBet(betid) {
 	return BlockchainSplitwise.methods.getBet(betid).call({from:web3.eth.defaultAccount});
+}
+
+async function getAllBets() {
+	return BlockchainSplitwise.methods.getAllBets().call({from:web3.eth.defaultAccount});
 }
 
 function check(name, condition) {
@@ -413,6 +443,17 @@ function check(name, condition) {
 		return 0;
 	}
 }
+
+// async function init() {
+// 	const { address, privateKey } = web3.eth.accounts.create();
+
+// 	console.log('Address:', address);
+// 	console.log('Private Key:', privateKey);
+// 	// await createUser("samlzx96");
+// 	// console.log(await getUserList)
+// }
+
+// init()
 
 async function sanityCheck() {
 	console.log ("\nTEST", "Simplest possible test: only runs one add_IOU; uses all client functions: lookup, getTotalOwed, getUsers, getLastActive");
@@ -474,7 +515,7 @@ async function sanityCheck() {
 	transac = await sendBet(betid, receiver, team_sender, balance_sender, team_receiver, balance_receiver)
 	
 	//confirming bet
-	web3.eth.defaultAccount = receiver;
+	
 	transac = await confirmBet(betid)
 	
 	//setting winner
@@ -494,4 +535,4 @@ async function sanityCheck() {
 	console.log(`Receiver has final balance: ${balance_receiver}`);
 }
 
-sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
+// sanityCheck() //Uncomment this line to run the sanity check when you first open index.html

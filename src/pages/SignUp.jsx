@@ -13,10 +13,14 @@ import { isValidEmail, isValidFirstLastName, isValidPassword, isValidUsername, }
 import { useSnackbar } from "../context/SnackbarContext";
 import { signup } from "../api/UsersAPI";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+import ButtonSpinner from "../components/ButtonSpinner";
 
 export default function SignUp() {
   const { openSuccessMessage, openErrorMessage } = useSnackbar();
   const navigate = useNavigate();
+  const { user, setUser } = useUser();
+  const [loading, setLoading] = useState(false); 
 
   const [formValues, setFormValues] = useState({
     username: "",
@@ -79,18 +83,19 @@ export default function SignUp() {
   };
 
   const handleSignupMessage = async () => {
+    setLoading(true);
     await signup(
       formValues,
-      (successMsg) => {
-        openSuccessMessage(successMsg + " Redirecting shortly...");
-        setTimeout(() => {
-          navigate("/signup/verify", {
-            state: { username: formValues.username }
-          });
-        }, 3000);
+      (successMsg, user) => {
+        openSuccessMessage(successMsg);
+        setUser(user);
+        navigate("/", {
+          state: { username: formValues.username }
+        });
       },
       openErrorMessage
     );
+    setLoading(false);
   };
 
   const handleSubmit = async (event) => {
@@ -112,7 +117,7 @@ export default function SignUp() {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon/>
+          <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -195,9 +200,9 @@ export default function SignUp() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, height: 36 }}
           >
-            Sign Up
+            {loading ? <ButtonSpinner /> : "Sign Up"}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>

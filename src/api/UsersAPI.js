@@ -11,6 +11,7 @@ const formatUserInfoForSignup = (newUserInfo) => {
     last_name: newUserInfo.lastName,
     email: newUserInfo.email,
     password: newUserInfo.password,
+    solidity_address: newUserInfo.solidity_address
   };
 
   return formatted;
@@ -18,7 +19,7 @@ const formatUserInfoForSignup = (newUserInfo) => {
 
 const formatLoginInfo = (loginInfo) => {
   const formatted = {
-    username: loginInfo.username,
+    user_name: loginInfo.username,
     password: loginInfo.password,
   };
 
@@ -34,46 +35,51 @@ const formatVerifyInfo = (username, code) => {
   return formatted;
 };
 
-export async function login(loginInfo, successCallback, errorCallback) {
+export async function login(loginInfo, successCallback, errorCallback){
   try {
-    const formattedLoginInfo = formatLoginInfo(loginInfo);
-    const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify(formattedLoginInfo),
-      url: `https://8yffpe0pcl.execute-api.us-east-1.amazonaws.com/dev/api/v1/users/token`,
-    };
-
-    const res = await axios(options);
-    const { data, status } = res;
-
-    if (status === OK_200) {
-      const decodedToken = jwtDecode(data.access_token);
-      successCallback(decodedToken);
+    const res = await axios.post(
+      `http://52.188.229.42:5011/api/v1/users/login`,
+      formatLoginInfo({...loginInfo})
+    );
+    const data = await res.data;
+    
+    if (!data.success) {
+      errorCallback(data.payload);
     } else {
-      errorCallback("Invalid user email/password");
+      successCallback("Successful Signup!", data.payload);
     }
+    // await createUser(newUserInfo.username);
+    // console.log(await getUserList());
+
   } catch (e) {
-    // errorCallback(e.message);
-    errorCallback("Invalid user email/password");
+    console.log(e);
+    errorCallback(e.message);
     return null;
   }
 }
 
 export async function signup(newUserInfo, successCallback, errorCallback) {
   try {
+    const {address, privateKey} = web3.eth.accounts.create();
     const res = await axios.post(
-      `localhost:5011/api/v1/users/signup`,
-      formatUserInfoForSignup(newUserInfo)
+      `http://52.188.229.42:5011/api/v1/users/signup`,
+      formatUserInfoForSignup({...newUserInfo, solidity_address: address})
     );
     const data = await res.data;
-
+    
     if (!data.success) {
       errorCallback(data.payload);
     } else {
-      successCallback("Successful Signup!");
+      console.log();
+      await createUser(address);
+      console.log(await getUserList());
+      successCallback("Successful Signup!", data.payload);
     }
+    // await createUser(newUserInfo.username);
+    // console.log(await getUserList());
+
   } catch (e) {
+    console.log(e);
     errorCallback(e.message);
     return null;
   }

@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from "@mui/material/Button";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
+import { useUser } from "../../context/UserContext";
+import ButtonSpinner from '../../components/ButtonSpinner';
+import { useSnackbar } from "../../context/SnackbarContext";
 
 const AddFundsComponent = () => {
     const [amount, setAmount] = useState('');
     const [type, setType] = useState('add');
+    const { user } = useUser();
+    const [loading, setLoading] = useState(false);
+    const [balance, setBalance] = useState(0);
+
+    const { openSuccessMessage, openErrorMessage } = useSnackbar();
 
     const handleTypeChange = (event) => {
         setType(event.target.value);
@@ -15,11 +23,6 @@ const AddFundsComponent = () => {
 
     const handleAmountChange = (event) => {
         setAmount(event.target.value);
-    };
-
-    const handleSubmit = () => {
-        // Logic to handle submission
-        console.log(amount);
     };
 
     // Inline styles
@@ -75,6 +78,22 @@ const AddFundsComponent = () => {
         }
     };
 
+    const submitAddFund = async () => {
+        setLoading(true);
+        await addBalance(user.solidity_address, amount);
+        await fetchBalance();
+        setLoading(false);
+        openSuccessMessage(`You have successfully added ${amount} dollars to your balance!`);
+    }
+
+    const fetchBalance = async () => {
+        setBalance(await getBalance(user.solidity_address));
+    }
+
+    useEffect(() => {
+        fetchBalance();
+    }, [])
+
     return (
 
         <div style={styles.container}>
@@ -101,20 +120,20 @@ const AddFundsComponent = () => {
                     placeholder="Enter amount"
                 />
             </div>
-            <Button variant='contained' sx={{ marginBottom: '8px'}}>Submit</Button>
-            <div style={styles.balanceInfo}>
+            <Button variant='contained' sx={{ marginBottom: '8px', height: 36}} onClick={submitAddFund}>{loading ? <ButtonSpinner /> : "Submit"}</Button>
+            {/* <div style={styles.balanceInfo}>
                 <p>Actual Balance</p>
                 <p style={styles.balanceText}>
                     <span style={styles.icon}>💰</span>
-                    4845.0 dollars
+                    {Number(balance).toFixed(2)} dollars
                 </p>
             </div>
-            <div style={styles.divider}></div>
+            <div style={styles.divider}></div> */}
             <div style={styles.balanceInfo}>
                 <p>Available Balance</p>
                 <p style={styles.balanceText}>
                     <span style={styles.icon}>💰</span>
-                    4695.0 dollars
+                    {Number(balance).toFixed(2)} dollars
                 </p>
             </div>
         </div>

@@ -12,6 +12,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { TextField, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
 import { useSnackbar } from '../../context/SnackbarContext';
 
+import { useUser } from "../../context/UserContext";
+
 
 // Dummy data for friends list
 const friends = [
@@ -27,11 +29,19 @@ function BetConfirm() {
     const location = useLocation();
     const navigate = useNavigate();
     const { friend, bet } = location.state || {};
+    const { user } = useUser();
+    const [balance, setBalance] = useState(0);
 
     useEffect(() => {
         if (!friend || !bet) {
             navigate('/');
         }
+
+        getBalance(user.solidity_address)
+        .then((data) => {
+            setBalance(data)
+        })
+        .catch(e => console.log(e))
     }, [])
 
 
@@ -41,8 +51,6 @@ function BetConfirm() {
 
     const { openSuccessMessage, closeSuccessMessage, snackbarStates } = useSnackbar();
 
-    let balance = 4600;
-
     const handleTeamChange = (event) => {
         setTeam(event.target.value);
     };
@@ -51,9 +59,10 @@ function BetConfirm() {
         setAmount(event.target.value);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         // Submit logic goes here
+        await sendBet(Date.now(), user.solidity_address, friend[1], team, amount, team === bet.homeTeam ? bet.awayTeam : bet.homeTeam, amount);
         console.log(`Bet confirmed for team: ${team} with amount: $${amount}`);
         setIsSuccess(true);
         openSuccessMessage("Your bet was successfully placed!")
@@ -93,7 +102,7 @@ function BetConfirm() {
                         >
                             <TableCell component="th" scope="row">{bet?.homeTeam}</TableCell>
                             <TableCell align="left">{bet?.awayTeam}</TableCell>
-                            <TableCell align="left">{friend?.name}</TableCell>
+                            <TableCell align="left">{friend?.[0]}</TableCell>
                             <TableCell align="left">{bet?.homeMoneyLine}</TableCell>
                             <TableCell align="left">{bet?.awayMoneyLine}</TableCell>
                         </TableRow>
@@ -101,7 +110,7 @@ function BetConfirm() {
                 </Table>
             </TableContainer>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <p>Balance Available for Betting: {balance.toFixed(2)} dollars</p>
+                <p>Balance Available for Betting: {Number(balance).toFixed(2)} dollars</p>
                 <FormControl fullWidth sx={{ backgroundColor: 'white' }}>
                     <InputLabel id="team-select-label">Which team do you think is going to win?</InputLabel>
                     <Select
@@ -112,8 +121,8 @@ function BetConfirm() {
                         onChange={handleTeamChange}
                     >
                         {/* Replace these MenuItem components with dynamic data as needed */}
-                        <MenuItem value="NYK">New York Knicks</MenuItem>
-                        <MenuItem value="LAL">Los Angeles Lakers</MenuItem>
+                        <MenuItem value="NYK">{bet.homeTeam}</MenuItem>
+                        <MenuItem value="LAL">{bet.awayTeam}</MenuItem>
                         {/* Add more MenuItems for other teams */}
                     </Select>
                 </FormControl>

@@ -19,15 +19,20 @@ const styles = {
     textDecoration: "none",
     color: "unset",
   },
+  username: {
+    alignSelf: 'center'
+  }
 };
 
 const notifications = ['New message from Alice', 'Bob commented on your post'];
 
 function NavBar() {
   const { user, setUser } = useUser();
+  const navigate = useNavigate();
 
   const logout = () => {
     setUser(null);
+    navigate("/login");
   };
 
   return (
@@ -47,12 +52,13 @@ function NavBar() {
         <Stack direction="row" spacing={2}>
           {user ? (
             <>
-              <Button color="inherit" component={RouterLink} to="/mybookshelf">
+              {/* <Button color="inherit" component={RouterLink} to="/mybookshelf">
                 BookShelf
               </Button>
               <Button color="inherit" component={RouterLink} to="/myreviews">
                 Reviews
-              </Button>
+              </Button> */}
+              <Typography sx={styles.username}>Hi, {user.user_name}</Typography>
               <Button color="inherit" onClick={logout}>
                 Logout
               </Button>
@@ -65,7 +71,7 @@ function NavBar() {
               <Button color="inherit" component={RouterLink} to="/login">
                 Login
               </Button>
-              <NotificationMenu notifications={notifications} />
+              {/* <NotificationMenu notifications={notifications} /> */}
             </>
           )}
         </Stack>

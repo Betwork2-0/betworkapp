@@ -14,6 +14,7 @@ import { isValidPassword, isValidUsername } from "../util";
 import { useUser } from "../context/UserContext";
 import { login } from "../api/UsersAPI";
 import { useSnackbar } from "../context/SnackbarContext";
+import ButtonSpinner from "../components/ButtonSpinner";
 
 export default function SignIn() {
   const { openErrorMessage } = useSnackbar();
@@ -22,6 +23,7 @@ export default function SignIn() {
   const [formErrors, setFormErrors] = useState({ username: "", password: "" });
   const { setUser } = useUser();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,8 +47,8 @@ export default function SignIn() {
     );
   };
 
-  const handleSuccessLogin = (userInfo) => {
-    setUser({ username: userInfo.sub });
+  const handleSuccessLogin = (userInfo, user) => {
+    setUser(user);
     navigate("/");
   };
 
@@ -56,11 +58,12 @@ export default function SignIn() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     if (validate()) {
       console.log(formValues);
       await login(formValues, handleSuccessLogin, handleFailedLogin);
     }
+    setLoading(false);
   };
 
   return (
@@ -115,9 +118,9 @@ export default function SignIn() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, height: 36 }}
           >
-            Log In
+            {loading ? <ButtonSpinner /> : "Log In"}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
