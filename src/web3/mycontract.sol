@@ -150,6 +150,7 @@ contract Betwork {
         for(uint i = 0; i < bets.length; i++)
         {
             if(bets[i].id == id 
+                && bets[i].confirmed
                 && !bets[i].is_settled 
                 && (msg.sender == bets[i].sender || msg.sender == bets[i].receiver)
                 && bytes(bets[i].team_winner).length > 0)

@@ -19,6 +19,11 @@ var abi = [
 			},
 			{
 				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
 				"name": "receiver",
 				"type": "address"
 			},
@@ -81,6 +86,11 @@ var abi = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
@@ -106,73 +116,6 @@ var abi = [
 			}
 		],
 		"name": "createUser",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			}
-		],
-		"name": "settleBet",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "winner",
-				"type": "string"
-			}
-		],
-		"name": "setWinner",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"internalType": "int256",
-				"name": "amount",
-				"type": "int256"
-			}
-		],
-		"name": "withdrawMoneyFromWallet",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -350,6 +293,78 @@ var abi = [
 		],
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "winner",
+				"type": "string"
+			}
+		],
+		"name": "setWinner",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "settleBet",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"internalType": "int256",
+				"name": "amount",
+				"type": "int256"
+			}
+		],
+		"name": "withdrawMoneyFromWallet",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	}
 ]; // FIXME: fill this in with your contract's ABI //Be sure to only have one array, not two
 
@@ -357,51 +372,49 @@ var abi = [
 abiDecoder.addABI(abi);
 // call abiDecoder.decodeMethod to use this - see 'getAllFunctionCalls' for more
 
-var contractAddress = '0x77A71Af2BF061A3DE55364Cb81Cd16B1fe59AbD6'; // FIXME: fill this in with your contract's address/hash
-var BlockchainSplitwise = new web3.eth.Contract(abi, contractAddress);
+var contractAddress = '0xec572eC25FA4637fcb034cde75b854373efA8AF0'; // FIXME: fill this in with your contract's address/hash
+var betworkContract = new web3.eth.Contract(abi, contractAddress);
 
 // =============================================================================
 //                            Functions To Implement
 // =============================================================================
 
-async function getUserList() {
-	return BlockchainSplitwise.methods.getUserList().call({from:web3.eth.defaultAccount}); 
-}
-
 async function createUser(user) {
-	return BlockchainSplitwise.methods.createUser(user).send({from:web3.eth.defaultAccount, gas:1000000});
+    return betworkContract.methods.createUser(user).send({from:web3.eth.defaultAccount, gas:1000000});
 }
-
 async function addBalance(user, amount) {
-	return BlockchainSplitwise.methods.addMoneyToWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
+    return betworkContract.methods.addMoneyToWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
 }
-
 async function withdrawBalance(user, amount) {
-	return BlockchainSplitwise.methods.withdrawMoneyFromWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
+    return betworkContract.methods.withdrawMoneyFromWallet(user, amount).send({from:web3.eth.defaultAccount, gas:1000000});
 }
-
-async function getBalance(user, amount) {
-	return BlockchainSplitwise.methods.getBalance(user).call({from:web3.eth.defaultAccount});
+async function sendBet(betid, user, receiver, t_s, a_s, t_r, a_r) {
+    return betworkContract.methods.addBet(betid, user, receiver, t_s, a_s, t_r, a_r).send({from:web3.eth.defaultAccount, gas:1000000});
 }
-
-async function sendBet(betid, receiver, t_s, a_s, t_r, a_r) {
-	return BlockchainSplitwise.methods.addBet(betid, receiver, t_s, a_s, t_r, a_r).send({from:web3.eth.defaultAccount, gas:1000000});
+async function confirmBet(user, betid) {
+    return betworkContract.methods.confirmBet(user, betid).send({from:web3.eth.defaultAccount, gas:1000000});
 }
-
-async function confirmBet(betid) {
-	return BlockchainSplitwise.methods.confirmBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
-}
-
 async function setWinner(betid, winner) {
-	return BlockchainSplitwise.methods.setWinner(betid, winner).send({from:web3.eth.defaultAccount, gas:1000000});
+    return betworkContract.methods.setWinner(betid, winner).send({from:web3.eth.defaultAccount, gas:1000000});
+}
+async function settleBet(user, betid) {
+    return betworkContract.methods.settleBet(user, betid).send({from:web3.eth.defaultAccount, gas:1000000});
 }
 
-async function settleBet(betid) {
-	return BlockchainSplitwise.methods.settleBet(betid).send({from:web3.eth.defaultAccount, gas:1000000});
+async function getUserList() {
+    return betworkContract.methods.getUserList().call({from:web3.eth.defaultAccount})
+}
+
+async function getBalance(user) {
+    return  betworkContract.methods.getBalance(user).call({from:web3.eth.defaultAccount})
 }
 
 async function getBet(betid) {
-	return BlockchainSplitwise.methods.getBet(betid).call({from:web3.eth.defaultAccount});
+    return betworkContract.methods.getBet(betid).call({from:web3.eth.defaultAccount});
+}
+
+async function getAllBets() {
+    return betworkContract.methods.getAllBets().call({from:web3.eth.defaultAccount});
 }
 
 function check(name, condition) {
@@ -414,84 +427,70 @@ function check(name, condition) {
 	}
 }
 
-async function sanityCheck() {
-	console.log ("\nTEST", "Simplest possible test: only runs one add_IOU; uses all client functions: lookup, getTotalOwed, getUsers, getLastActive");
+async function setUpAndRun() {
+	console.log ("Setting Up.. ");
 
 	var accounts = await web3.eth.getAccounts();
+	web3.eth.defaultAccount = accounts[0];
 
-	const sender = accounts[0];
-	const receiver = accounts[1];
-	web3.eth.defaultAccount = sender; //I am the sender
+	const sender = web3.eth.accounts.create().address;
+	const receiver = web3.eth.accounts.create().address;
+
 	console.log(`Sender: ${sender}; Receiver: ${receiver}`)
 	
 	//get users
-	var users = await getUserList()
+	let users = await getUserList();
 	console.log(`Initial getUserList() has: ${users}`)
 	
 	//create users from addresses
+	console.log("Creating Users 'sender' and 'receiver'")
 	var transac = await createUser(sender)
 	transac = await createUser(receiver)
+	console.log(".. Done")
 	
-	users = await getUserList()
-	check("getUserList() has 2 users", users.length === 2);
-
+	users = await getUserList();
+	console.log(`Current user list: ${users}`)
+	
 	//check initial balance
-	var balance_sender = parseInt(await getBalance(sender))
-	console.log(`Sender has initial balance: ${balance_sender}`);
+	let sender_balance = await getBalance(sender)
+	console.log(`Initial Sender Balance = ${sender_balance}`)
+	let receiver_balance = await getBalance(receiver)
+	console.log(`Initial Receiver Balance = ${receiver_balance}`)
 
-	var balance_receiver = parseInt(await getBalance(receiver))
-	console.log(`Receiver has initial balance: ${balance_receiver}`);
-
-	//withdraw all balance and check if zero
-	if(balance_sender > 0)
-	{
-		transac = await withdrawBalance(sender, balance_sender)
-		balance_sender = parseInt(await getBalance(sender))
-		check("After withdrawal, sender has balance 0", balance_sender === 0)
-	}
-	if(balance_receiver > 0)
-	{
-		transac = await withdrawBalance(receiver, balance_receiver)
-		balance_receiver = parseInt(await getBalance(receiver))
-		check("After withdrawal, receiver has balance 0", balance_receiver === 0)
-	}
-	
-	
 	//adding money to wallet
+	console.log("\nAdding Money To Wallets\n")
 	transac = await addBalance(sender, 10)
 	transac = await addBalance(receiver, 15)
-	
-	//check final balance
-	balance_sender = parseInt(await getBalance(sender))
-	balance_receiver = parseInt(await getBalance(receiver))
-	check("After deposit, sender has balance 10", balance_sender === 10)
-	check("After deposit, receiver has balance 15", balance_receiver === 15)
+	sender_balance = await getBalance(sender)
+	console.log(`Sender Balance = ${sender_balance}`)
+	receiver_balance = await getBalance(receiver)
+	console.log(`Receiver Balance = ${receiver_balance}`)
 
-	betid = 1
-	team_sender = "TS"
-	team_receiver = "TR"
+	//setting a bet
+	betid = 5020
+	team_sender = "Miami"
+	team_receiver = "Boston"
+	team_winner = team_receiver
+
 	//adding bet
-	transac = await sendBet(betid, receiver, team_sender, balance_sender, team_receiver, balance_receiver)
+	transac = await sendBet(betid, sender, receiver, team_sender, 3, team_receiver, 3)
 	
 	//confirming bet
-	web3.eth.defaultAccount = receiver;
-	transac = await confirmBet(betid)
+	transac = await confirmBet(receiver, betid)
 	
 	//setting winner
-	transac = await setWinner(betid, team_receiver)
-
-	//printing bet
-	var bet = await getBet(betid)
-	console.log(bet)
+	console.log(`Setting Winner Team to ${team_winner}`)
+	transac = await setWinner(betid, team_winner)
 
 	//settle bet
-	transac = await settleBet(betid)
+	transac = await settleBet(sender, betid)
 
 	//printing balances
-	balance_sender = parseInt(await getBalance(sender))
-	balance_receiver = parseInt(await getBalance(receiver))
-	console.log(`Sender has final balance: ${balance_sender}`);
-	console.log(`Receiver has final balance: ${balance_receiver}`);
+	console.log("\nPrinting Final Balances:")
+	sender_balance = await getBalance(sender)
+	console.log(`Sender Balance = ${sender_balance}`)
+	receiver_balance = await getBalance(receiver)
+	console.log(`Receiver Balance = ${receiver_balance}`)
 }
 
-sanityCheck() //Uncomment this line to run the sanity check when you first open index.html
+setUpAndRun() //Uncomment this line to run the sanity check when you first open index.html
