@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 contract Betwork {
     struct Bet {
         uint id;
@@ -14,11 +13,9 @@ contract Betwork {
         bool confirmed;
         bool is_settled;
     }
-
     Bet[] internal bets;
     mapping(address=>int) internal balances;
     address[] internal users;
-
     function createUser(address user) public returns (bool) {
         if(checkUserExists(user))
         {
@@ -65,7 +62,7 @@ contract Betwork {
 
     function addMoneyToWallet(address user, int amount) public returns (bool) {
         assert(checkUserExists(user));
-        assert(amount > 0); 
+        assert(amount > 0);
         return changeWallet(user, amount);
     }
 
@@ -86,21 +83,20 @@ contract Betwork {
         }
     }
 
-    function addBet(uint id, address receiver, string calldata t_s, int a_s, string calldata t_r, int a_r) public returns (bool) {
+    function addBet(uint id, address user, address receiver, string calldata t_s, int a_s, string calldata t_r, int a_r) public returns (bool) {
         assert(a_s > 0);
         assert(a_r > 0);
-        if(balances[msg.sender] < a_s && balances[receiver] < a_r)
+        if(balances[user] < a_s && balances[receiver] < a_r)
         {
             return false;
         }
-
         Bet memory new_bet;
         new_bet.id = id;
-        new_bet.sender = msg.sender;
+        new_bet.sender = user;
         new_bet.receiver = receiver;
         new_bet.team_sender = t_s;
         new_bet.amount_sender = a_s;
-        new_bet.team_receiver = t_r; 
+        new_bet.team_receiver = t_r;
         new_bet.amount_receiver = a_r;
         new_bet.confirmed = false;
         new_bet.team_winner = "";
@@ -109,17 +105,16 @@ contract Betwork {
         return true;
     }
 
-    function confirmBet(uint id) public returns (bool) {
+    function confirmBet(address user, uint id) public returns (bool) {
         for(uint i = 0; i < bets.length; i++)
         {
-            if(bets[i].id == id && bets[i].receiver == msg.sender)
+            if(bets[i].id == id && bets[i].receiver == user)
             {
                 bool withdrawal_sender = withdrawMoneyFromWallet(bets[i].sender, bets[i].amount_sender);
                 if(!withdrawal_sender)
                 {
                     return false;
                 }
-
                 bool withdrawal_receiver = withdrawMoneyFromWallet(bets[i].receiver, bets[i].amount_receiver);
                 if(!withdrawal_receiver)
                 {
@@ -146,18 +141,17 @@ contract Betwork {
         return false;
     }
 
-    function settleBet(uint id) public returns (bool) {
+    function settleBet(address user, uint id) public returns (bool) {
         for(uint i = 0; i < bets.length; i++)
         {
-            if(bets[i].id == id 
-                && bets[i].confirmed
-                && !bets[i].is_settled 
-                && (msg.sender == bets[i].sender || msg.sender == bets[i].receiver)
+            if(bets[i].id == id
+                && !bets[i].is_settled
+                && (user == bets[i].sender || user == bets[i].receiver)
                 && bytes(bets[i].team_winner).length > 0)
             {
                 bets[i].is_settled = true;
                 if(keccak256(bytes(bets[i].team_sender)) == keccak256(bytes(bets[i].team_winner))) {
-                    balances[bets[i].sender] += bets[i].amount_sender + bets[i].amount_receiver;                    
+                    balances[bets[i].sender] += bets[i].amount_sender + bets[i].amount_receiver;
                 } else if (keccak256(bytes(bets[i].team_receiver)) == keccak256(bytes(bets[i].team_winner))) {
                     balances[bets[i].receiver] += bets[i].amount_sender + bets[i].amount_receiver;
                 } else {
@@ -168,10 +162,10 @@ contract Betwork {
         }
         return false;
     }
-
+    
     function getAllBets() public view returns (Bet[] memory bet_list) {
         bet_list = new Bet[](bets.length);
-        for (uint i = 0; i < users.length; i++)
+        for (uint i = 0; i < bets.length; i++)
             bet_list[i] = bets[i];
     }
 }
