@@ -13,7 +13,7 @@ This is the front-end and solidity repository for our final project. There are a
 
 Our project's back-end infrastructure is architected on the foundational principles of a **sophisticated microservice architecture**, ensuring a modular, scalable, and resilient service deployment. Each microservice is intricately designed to serve specific areas of our application, with a primary focus on two crucial domains: **User Data Management** and **NBA Betting Data Aggregation**.
 
-Originally, the goal was to maintain two separate microservices, but for more practical purposes, the nba + user microservices can be found in the 'User Microservices' respository in this project. 
+Originally, the goal was to maintain two separate microservices, but for more practical purposes, the nba + user microservices can be found in the ['User Microservices'](https://github.com/Betwork2-0/users-microservice.git) respository in this project. 
 
 #### User Data Management
 This microservice acts as a cornerstone, handling intricate aspects of user authentication, profile management, and personalized user experiences.
@@ -38,7 +38,7 @@ Incorporating FastAPI highlights our dedication to adopting best practices in AP
 ---
 
 ### How to Get the Back-End Running Locally
-The cost of azure services was too expensive to justify paying for indefinitely, so in order to test out these features, you'll currently need to clone the Users Microservice repository. 
+The cost of azure services was too expensive to justify paying for indefinitely, so in order to test out these features, you'll currently need to clone the Users Microservice [repository](https://github.com/Betwork2-0/users-microservice.git). 
 
 #### Requirements
 To install all the project's dependencies, run: `pip3 install -r requirements.txt` 
