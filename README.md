@@ -52,7 +52,7 @@ The testscript also includes a "setUpAndRun()" function, which can be used to ex
 
 A snapshot of the testing is included below:
 
-
+![image](https://github.com/Betwork2-0/betworkapp/assets/32813957/54a9f794-35cf-4fa2-b2b1-79306d2f8535)
 
 #### Running and building the app
 Run the app: `python3 main.py`  \
