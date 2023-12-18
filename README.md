@@ -55,7 +55,8 @@ New endpoints will be automatically added to Swagger.
 ### How to Get the Front-End Running Locally
 - Run 'npm install'
 - Run 'npm run dev'
-- Open http://localhost:5173 to view it in your browser. 
+- Open http://localhost:5173 to view it in your browser.
+- Check out the 2-minute [demo video](https://youtu.be/J_m5cQeDIMA)
 
 #### Login page
 <img width="1440" alt="Screen Shot 2023-12-17 at 22 02 56" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/4d261d39-d54f-47cc-99c5-fdc3319b8959">
