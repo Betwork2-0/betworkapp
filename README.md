@@ -44,6 +44,16 @@ The cost of azure services was too expensive to justify paying for indefinitely,
 To install all the project's dependencies, run: `pip3 install -r requirements.txt` 
 - See requirements.txt file.
 
+### Solidity Contract
+The Solidity Contract is described in "mycontract.sol" at: [Betwork Contract](src/web3/)
+Once deployed on Ganache locally, the Contract Hash and ABI can be updated in "testing.js" within the same directory.
+
+The testscript also includes a "setUpAndRun()" function, which can be used to exhaustively test the functionality of the contract.
+
+A snapshot of the testing is included below:
+
+
+
 #### Running and building the app
 Run the app: `python3 main.py`  \
 Open [http://localhost:5011](http://localhost:5011) to view it in your browser.
