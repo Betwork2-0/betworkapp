@@ -43,6 +43,12 @@ The cost of azure services was too expensive to justify paying for indefinitely,
 #### Requirements
 To install all the project's dependencies, run: `pip3 install -r requirements.txt` 
 - See requirements.txt file.
+  
+#### Running and building the app
+Run the app: `python3 main.py`  \
+Open [http://localhost:5011](http://localhost:5011) to view it in your browser.
+To see all endpoints available by Swagger, go to [http://localhost:5011/docs](http://localhost:5011/docs)
+New endpoints will be automatically added to Swagger.
 
 ## Front-End
 
@@ -87,8 +93,3 @@ A snapshot of the testing is included below:
 
 ![image](https://github.com/Betwork2-0/betworkapp/assets/32813957/54a9f794-35cf-4fa2-b2b1-79306d2f8535)
 
-#### Running and building the app
-Run the app: `python3 main.py`  \
-Open [http://localhost:5011](http://localhost:5011) to view it in your browser.
-To see all endpoints available by Swagger, go to [http://localhost:5011/docs](http://localhost:5011/docs)
-New endpoints will be automatically added to Swagger.
