@@ -44,11 +44,40 @@ The cost of azure services was too expensive to justify paying for indefinitely,
 To install all the project's dependencies, run: `pip3 install -r requirements.txt` 
 - See requirements.txt file.
 
-## How to Get the Front-End Running Locally
--Run 'npm install'
--Run 'npm run dev'
+## Front-End
 
-### Solidity Contract
+### How to Get the Front-End Running Locally
+Run 'npm install' and then run 'npm run dev'
+
+#### Login page
+<img width="1440" alt="Screen Shot 2023-12-17 at 22 02 56" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/4d261d39-d54f-47cc-99c5-fdc3319b8959">
+
+#### Sign up page
+<img width="1440" alt="Screen Shot 2023-12-17 at 22 03 03" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/4e6f3d46-ed04-4db1-a590-b112aca4ee79">
+
+#### Home page
+<img width="1440" alt="Screen Shot 2023-12-17 at 21 53 36" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/754d2771-af7d-4a3f-ae86-43cc94ca6c56">
+
+#### My bets page
+<img width="1436" alt="Screen Shot 2023-12-17 at 21 54 57" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/4b60e74b-8ed6-4457-a4e9-e39745b165e3">
+
+#### My wallet page
+<img width="1440" alt="Screen Shot 2023-12-17 at 21 57 12" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/35e40786-f438-45db-aac8-b474a3325a82">
+
+#### My friends page
+<img width="1440" alt="Screen Shot 2023-12-17 at 21 57 56" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/cde9cff5-54e9-4bf2-b0ba-8456a4733a99">
+
+#### Add friend page
+<img width="1440" alt="Screen Shot 2023-12-17 at 21 58 39" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/e6c3133a-7f23-4c74-97fe-729122a2dba2">
+
+#### Propose bet page
+<img width="1440" alt="Screen Shot 2023-12-17 at 22 01 13" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/8018e761-19a8-4c06-a949-e0ac26d764a6">
+<img width="1440" alt="Screen Shot 2023-12-17 at 22 01 25" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/53130409-2995-42c7-bb9d-81abc5c40bca">
+<img width="1440" alt="Screen Shot 2023-12-17 at 22 01 36" src="https://github.com/Betwork2-0/betworkapp/assets/50009045/6fc2792a-cbfe-4158-8895-404071606c18">
+
+
+
+## Solidity Contract
 The Solidity Contract is described in "mycontract.sol" at: [Betwork Contract](src/web3/)
 Once deployed on Ganache locally, the Contract Hash and ABI can be updated in "testing.js" within the same directory.
 
