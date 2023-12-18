@@ -38,7 +38,7 @@ const formatVerifyInfo = (username, code) => {
 export async function login(loginInfo, successCallback, errorCallback){
   try {
     const res = await axios.post(
-      `http://52.188.229.42:5011/api/v1/users/login`,
+      `http://localhost:5011/api/v1/users/login`,
       formatLoginInfo({...loginInfo})
     );
     const data = await res.data;
@@ -62,7 +62,7 @@ export async function signup(newUserInfo, successCallback, errorCallback) {
   try {
     const {address, privateKey} = web3.eth.accounts.create();
     const res = await axios.post(
-      `http://52.188.229.42:5011/api/v1/users/signup`,
+      `http://localhost:5011/api/v1/users/signup`,
       formatUserInfoForSignup({...newUserInfo, solidity_address: address})
     );
     const data = await res.data;

@@ -88,7 +88,7 @@ const Friends = () => {
         // Implement your search logic here
         console.log('Searching for:', username);
         setSearchLoading(true);
-        axios.get(`http://52.188.229.42:5011/api/v1/user/${username}`)
+        axios.get(`http://localhost:5011/api/v1/user/${username}`)
         .then((data) => {
             console.log("user: ", data);
             if (data.data.success) {
@@ -101,7 +101,7 @@ const Friends = () => {
 
     const addFriend = async (friendUsername, setActionLoading) => {
         setActionLoading(true);
-        axios.post(`http://52.188.229.42:5011/api/v1/user/add-friend`, {
+        axios.post(`http://localhost:5011/api/v1/user/add-friend`, {
             user_name: user.user_name,
             friend_user_name: friendUsername
         })
@@ -122,7 +122,7 @@ const Friends = () => {
     const getFriends = async () => {
         setLoading(true);
         let username = user.user_name;
-        axios.get(`http://52.188.229.42:5011/api/v1/user/${username}/friends`)
+        axios.get(`http://localhost:5011/api/v1/user/${username}/friends`)
         .then(data => {
             setFriends(data.data.payload);
         })

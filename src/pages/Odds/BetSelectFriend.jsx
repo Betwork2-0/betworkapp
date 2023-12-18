@@ -80,7 +80,7 @@ function BetSelectFriend() {
         const getFriends = async () => {
             setLoading(true);
             let username = user.user_name;
-            axios.get(`http://52.188.229.42:5011/api/v1/user/${username}/friends`)
+            axios.get(`http://localhost:5011/api/v1/user/${username}/friends`)
             .then(data => {
                 console.log("friend data ", data);
                 setFriends(data.data.payload);

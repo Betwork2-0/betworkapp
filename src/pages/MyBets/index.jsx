@@ -244,7 +244,7 @@ export default function MyBets() {
                 }
             })
 
-            Promise.all(Object.keys(userTable).map(address => axios.get(`http://52.188.229.42:5011/api/v1/user/saddr/${address}`)))
+            Promise.all(Object.keys(userTable).map(address => axios.get(`http://localhost:5011/api/v1/user/saddr/${address}`)))
                 .then(d => {
                     d.forEach(user => {
                         userTable[user.data.payload.solidity_address] = user.data.payload.user_name;
